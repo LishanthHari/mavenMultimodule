@@ -43,15 +43,17 @@ jobs:
           do
           echo "file name :" $i
           done
-          while IFS="" $i -r line;
-          do
-              echo $line
-              if [ ${line} < 0 ]; then
-                echo "Input value is  null"
-                exit -1
-              fi
-          done
           echo "bom file is available and valid" $i
+      - name: Bom file read and validate
+        run: |
+           while IFS="" $i -r line;
+           do
+            echo $line
+            if [ ${line} < 0 ]; then
+              echo "Input value is  null"
+              exit -1
+            fi
+           done
 
       - name: Setup Java
         uses: actions/setup-java@v3.10.0
