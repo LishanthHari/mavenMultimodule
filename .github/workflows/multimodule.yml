@@ -45,3 +45,13 @@ jobs:
               #fi
           #done < ./sample.bom
           echo "bom file is available and valid" $i
+
+      - name: Checkout
+        uses: actions/checkout@v3.3.0
+
+      - name: Setup Java
+        uses: actions/setup-java@v3.10.0
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
