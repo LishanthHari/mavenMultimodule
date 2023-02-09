@@ -1,0 +1,132 @@
+name: ReleaseLibraries
+
+on:
+  push:
+      branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  ARTIFACTORY_USERNAME: "sreenivasrao.basi@ingka.com"
+  ARTIFACTORY_PASSWORD: "India@2023" 
+  #${{ secrets.JFROG_ARTIFACTORY_TOKEN }}
+  ARTIFACTORY_HOST: "https://artifactory.build.ingka.ikea.com:443/artifactory/ilo-fli-common-maven-release-local"
+  ARTIFACT_VERSION: "1.0.0"
+  COMMITMESSAGE: ${{ github.event.head_commit.message }}
+
+jobs:
+
+
+  validate-input:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate input
+        run: |
+          message=${{ contains(github.event.head_commit.message, 'Release Library') }}
+          if [ ${message} == false ]; then
+            echo "Invalid commit message, Please use 'Release Library' to run  job "
+            exit -1
+          fi
+          echo "Commit message is validated"
+        #env:
+          #CommitMessage: ${{ github.event.head_commit.message }}
+      - name: Setting variables
+        run: |
+          echo "WORK_DIR=`pwd`" >> $GITHUB_ENV
+      - name: Validating of .bom file
+        #id: validation
+        run: |
+          for i in *.bom
+          do
+          echo "file name :" $i
+          done
+          #while IFS="" read -r line;
+          #do
+              #echo $line
+              #if [ ${line} < 0 ]; then
+                #echo "Input value is  null"
+                #exit -1
+              #fi
+          #done < ./sample.bom
+          echo "bom file is available and valid" $i
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '19'
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: mvn -s ./settings.xml package -Dmaven.test.skip -Drevision=${{env.ARTIFACT_VERSION}}  
+        
+
+      - name: Upload artifacts for deployment job to github
+        uses: actions/upload-artifact@v2
+        with:
+          name: common-lib
+          path: |
+            ${{ github.workspace }}/**/target/*.jar
+            ${{ github.workspace }}/**/pom.xml
+
+  upload-artifact:
+      runs-on: ubuntu-latest
+      needs: [ build ]
+      env:
+        ARTIFACTORY_LOCAL: "https://artifactory.build.ingka.ikea.com:443/artifactory/ilo-fli-common-maven-release-local"
+        ARTIFACTORY_PATH: "com/test_artfct/jar"
+        VERSION_TYPE: "SNAPSHOT"
+
+     
+      steps:
+        - name: Download artifact from build job in github
+          uses: actions/download-artifact@v2
+          with:
+            name: common-lib
+
+        - name: Display structure of downloaded files in github
+          run: ls -R
+
+        - name: Deploy jar to Artifactory
+          run: |
+            # PREFIX=${{env.PREFIX}}-${{env.ENVIRONMENT}}-
+            # echo "Deploying jar $PREFIX to artifactory"
+            VERSION=${{ env.ARTIFACT_VERSION }}-${{ env.VERSION_TYPE }}
+            ARTIFACT=one-1.0.jar
+            DEPLOY_ARTIFACT_PATH="${{env.ARTIFACTORY_LOCAL}}/${{env.ARTIFACTORY_PATH}}/${VERSION}/$ARTIFACT"
+            ARTIFACT_PATH=./**/target/$ARTIFACT
+            echo artifact name: $ARTIFACT
+            echo deploy artifact path: $DEPLOY_ARTIFACT_PATH
+            
+            curl -u ${{env.ARTIFACTORY_USERNAME}}:${{env.ARTIFACTORY_PASSWORD}} -X PUT "$DEPLOY_ARTIFACT_PATH" -T $ARTIFACT_PATH
+          
+        - name: Resolve variables in pom
+          run: |           
+            POM=./pom.xml
+            
+            echo "Resolve variables in pom $POM"
+            sed -i 's/${prefix}/${{env.PREFIX}}-${{env.ENVIRONMENT}}-/g' $POM
+            sed -i 's/${revision}/${{ env.ARTIFACT_VERSION }}/g' $POM
+            sed -i 's/${changelist}/${{ env.VERSION_TYPE }}/g' $POM
+          env:
+            PREFIX: ${{ inputs.prefix }}
+            ENVIRONMENT: ${{ inputs.environment }}
+
+        - name: Deploy pom to Artifactory
+          run: |
+            PREFIX=${{env.PREFIX}}-${{env.ENVIRONMENT}}-
+            echo "Deploying pom $PREFIX to artifactory"
+            VERSION=${{ env.ARTIFACT_VERSION }}-${{ env.VERSION_TYPE }}
+            POM=${PREFIX}-${VERSION}.pom
+            DEPLOY_POM_PATH="${{env.ARTIFACTORY_LOCAL}}/${{env.ARTIFACTORY_PATH}}/${PREFIX}/${VERSION}/$POM"
+            POM_PATH=./pom.xml
+            curl -u ${{env.ARTIFACTORY_USERNAME}}:${{env.ARTIFACTORY_PASSWORD}} -X PUT "$DEPLOY_POM_PATH" -T $POM_PATH
+          env:
+            PREFIX: ${{ inputs.prefix }}
+            ENVIRONMENT: ${{ inputs.environment }}
