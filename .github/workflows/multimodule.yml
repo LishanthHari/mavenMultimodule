@@ -75,3 +75,17 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+          
+      - name: Upload artifacts for deployment job to github
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: release-library
+          path: |
+            ${{ github.workspace }}/**/target/*.jar
+            ${{ github.workspace }}/**/pom.xml
+      - name: Download artifact from build job in github
+        uses: actions/download-artifact@v3.0.2
+        with:
+          name: release-library
+      - name: Display structure of downloaded files in github
+        run: ls -R
