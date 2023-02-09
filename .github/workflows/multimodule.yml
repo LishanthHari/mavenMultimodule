@@ -44,6 +44,10 @@ jobs:
           echo "file name :" $i
           done
           echo "bom file is available and valid" $i
+          while IFS= "" read -r line;
+          do
+            echo "file content :" $line
+          done <$i
       - name: Bom file read and validate
         run: |
            while IFS="" read -r line;
