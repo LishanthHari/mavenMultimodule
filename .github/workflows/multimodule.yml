@@ -53,7 +53,8 @@ jobs:
               echo "Input value is  null"
               exit -1
             fi
-           done <$i
+           done <test.bom
+           echo "bom file name is :" $i 
 
       - name: Setup Java
         uses: actions/setup-java@v3.10.0
