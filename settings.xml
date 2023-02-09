@@ -21,13 +21,13 @@
             <enabled>false</enabled>
           </snapshots>
           <id>central</id>
-          <name>ilo-fli-common-maven-virtual</name>
-          <url>https://artifactory.build.ingka.ikea.com:443/artifactory/ilo-fli-common-maven-virtual</url>
+          <name>ilo-fli-common-maven-release-local</name>
+          <url>https://artifactory.build.ingka.ikea.com:443/artifactory/ilo-fli-common-maven-release-local</url>
         </repository>
         <repository>
           <snapshots />
           <id>snapshots</id>
-          <name>ilo-fli-common-maven-virtual</name>
+          <name>ilo-fli-common-maven-release-local</name>
           <url>${ARTIFACTORY_HOST}</url>
         </repository>
       </repositories>
@@ -37,13 +37,13 @@
             <enabled>false</enabled>
           </snapshots>
           <id>central</id>
-          <name>ilo-fli-common-maven-virtual</name>
+          <name>ilo-fli-common-maven-release-local</name>
           <url>${ARTIFACTORY_HOST}</url>
         </pluginRepository>
         <pluginRepository>
           <snapshots />
           <id>snapshots</id>
-          <name>ilo-fli-common-maven-virtual</name>
+          <name>ilo-fli-common-maven-release-local</name>
           <url>${ARTIFACTORY_HOST}</url>
         </pluginRepository>
       </pluginRepositories>
