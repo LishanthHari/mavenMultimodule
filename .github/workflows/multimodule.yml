@@ -67,7 +67,7 @@ jobs:
       - name: GitHub Actions Build with Maven
         run: |
           #mvn -B package --file pom.xml
-          mvn -U ./settings.xml package -Dmaven.test.skip -Drevision=${{env.ARTIFACT_VERSION}}
+          mvn -s ./settings.xml package -Dmaven.test.skip
       
       - name: Set up Cache for Maven
         uses: actions/cache@v3
