@@ -12,7 +12,8 @@ env:
 jobs:
 
   validate-input:
-    runs-on: ubuntu-22.04.1
+    #runs-on: ubuntu-22.04.1
+    runs-on: ubuntu-latest
     steps:
       - name: Validate input commit message
         run: |
