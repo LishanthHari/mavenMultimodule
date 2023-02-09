@@ -43,14 +43,14 @@ jobs:
           do
           echo "file name :" $i
           done
-          #while IFS="" read -r line;
-          #do
-              #echo $line
-              #if [ ${line} < 0 ]; then
-                #echo "Input value is  null"
-                #exit -1
-              #fi
-          #done < ./sample.bom
+          while IFS="" $i -r line;
+          do
+              echo $line
+              if [ ${line} < 0 ]; then
+                echo "Input value is  null"
+                exit -1
+              fi
+          done
           echo "bom file is available and valid" $i
 
       - name: Setup Java
