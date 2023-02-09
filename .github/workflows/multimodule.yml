@@ -7,11 +7,16 @@ on:
     branches: [ "master" ]
 
 env:
+  ARTIFACTORY_USERNAME: "sreenivasrao.basi@ingka.com"
+  ARTIFACTORY_PASSWORD: "In" 
+  #${{ secrets.JFROG_ARTIFACTORY_TOKEN }}
+  ARTIFACTORY_HOST: "https://artifactory.build.ingka.ikea.com:443/artifactory/ilo-fli-common-maven-release-local"
+  ARTIFACT_VERSION: "1.0.2"
   COMMITMESSAGE: ${{ github.event.head_commit.message }}
 
 jobs:
 
-  validate-input:
+  ReleaseLibraries-Job:
     #runs-on: ubuntu-22.04.1
     runs-on: ubuntu-latest
     steps:
@@ -53,5 +58,15 @@ jobs:
         uses: actions/setup-java@v3.10.0
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '19'
           cache: 'maven'
+      - name: Build with Maven
+        run: mvn -s ./settings.xml package -Dmaven.test.skip -Drevision=${{env.ARTIFACT_VERSION}}
+      
+      - name: Upload artifacts for deployment job to github
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: release-library
+          path: |
+            ${{ github.workspace }}/**/target/*.jar
+            ${{ github.workspace }}/**/pom.xml
