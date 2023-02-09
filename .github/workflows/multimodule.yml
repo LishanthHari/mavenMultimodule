@@ -41,11 +41,13 @@ jobs:
         run: |
           for i in *.bom
           do
+          if [ -z "$i"] then
+            exit
+          fi
           echo "file name :" $i
           done
           echo "bom file is available and valid" $i
-        env:
-          Bomfile: $i
+
       - name: Bom file read and validate
         run: |
            while IFS="" read -r line;
