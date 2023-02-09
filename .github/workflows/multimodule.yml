@@ -11,25 +11,36 @@ env:
 
 jobs:
 
-
   validate-input:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04.1
     steps:
-      - name: Validate input
+      - name: Validate input commit message
         run: |
           message=${{ contains(github.event.head_commit.message, 'Release Library') }}
           if [ ${message} == false ]; then
-            echo "Invalid commit message, Please use 'Release Library' to  run job "
+            echo "Invalid commit message, Please use 'Release Library' to run job "
             exit -1
           fi
           echo "Commit message is validated"
-      - name: Setting variables
+      - name: Checkout branch from GitHub
+        uses: actions/checkout@v3
+
+      - name: Setting up variables
         run: |
           echo "WORK_DIR=`pwd`" >> $GITHUB_ENV
       - name: Validating of .bom file
+        #id: validation
         run: |
           for i in *.bom
-            do
-              echo "file name :" $i
-            done
+          do
+          echo "file name :" $i
+          done
+          #while IFS="" read -r line;
+          #do
+              #echo $line
+              #if [ ${line} < 0 ]; then
+                #echo "Input value is  null"
+                #exit -1
+              #fi
+          #done < ./sample.bom
           echo "bom file is available and valid" $i
