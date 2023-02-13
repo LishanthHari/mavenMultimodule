@@ -47,7 +47,7 @@ jobs:
           while read line;
           do
             data+=("$line")
-            echo "while loop readline : " $data
+            echo "while loop readline : " ${data[@]}
           done <$i
           echo "bom file name is :" $i
           for value in "${data[@]}";
