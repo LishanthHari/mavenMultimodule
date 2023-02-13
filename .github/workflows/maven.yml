@@ -50,8 +50,12 @@ jobs:
           echo "Available BOM file :" $i
           for value in "${data[@]}";
           do
-           echo "Sub modules/Dependencies :" $value
-           find $value/pom.xml
+            if [ ${value} == false ]; then
+              echo "Pom file not available "
+              exit -1
+            fi
+            echo "Sub modules/Dependencies :" $value
+            find $value/pom.xml
           done
       - name: Setup Java
         uses: actions/setup-java@v3.10.0
