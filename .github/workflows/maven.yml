@@ -44,6 +44,8 @@ jobs:
           echo "file name :" $i
           done
           echo "bom file is available and valid" $i
+      - name: Bom file read and validate
+        run: |
           while read line;
           do
             data+=("$line")
