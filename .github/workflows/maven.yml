@@ -51,7 +51,7 @@ jobs:
           for value in "${data[@]}";
           do
            echo "Sub modules/Dependencies :" $value
-           echo "path to find .pom :"find $value/*.pom
+           find $value/*.pom
           done
       - name: Setup Java
         uses: actions/setup-java@v3.10.0
