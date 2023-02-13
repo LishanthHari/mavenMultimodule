@@ -41,12 +41,13 @@ jobs:
           for i in *.bom
           do
           echo "file name :" $i
-          done
-          echo "Available BOM file :" $i
           while read line;
           do
             data+=("$line")
           done <$i
+
+          done
+          echo "Available BOM file :" $i
           for value in "${data[@]}";
           do
            echo "Sub modules/Dependencies :" $value
@@ -61,8 +62,8 @@ jobs:
 
       - name: GitHub Actions Build with Maven
         run: |
-          #mvn -B package --file pom.xml
-          mvn -s ./settings.xml package -Dmaven.test.skip
+          mvn -B package --file pom.xml
+          #mvn -s ./settings.xml package -Dmaven.test.skip
       
       - name: Set up Cache for Maven
         uses: actions/cache@v3
