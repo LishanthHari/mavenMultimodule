@@ -36,25 +36,21 @@ jobs:
       - name: Setting up variables
         run: |
           echo "WORK_DIR=`pwd`" >> $GITHUB_ENV
-      - name: Validating of .bom file
-        #id: validation
+      - name: Validation process
         run: |
           for i in *.bom
           do
           echo "file name :" $i
           done
-          echo "bom file is available and valid" $i
-      - name: Bom file read and validate
-        run: |
+          echo "Available BOM file :" $i
           while read line;
           do
             data+=("$line")
-            echo "while loop readline : " ${data[@]}
           done <$i
-          echo "bom file name is :" $i
           for value in "${data[@]}";
           do
-           echo "for loop messages :" $value
+           echo "Sub modules/Dependencies :" $value
+           echo "path to find .pom :"find $value/*.pom
           done
       - name: Setup Java
         uses: actions/setup-java@v3.10.0
