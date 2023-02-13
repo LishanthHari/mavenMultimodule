@@ -2,9 +2,9 @@ name: ReleaseLibraries
 
 on:
   push:
-      branches: [ "branch1" ]
+      branches: [ "master" ]
   pull_request:
-    branches: [ "branch1" ]
+    branches: [ "master" ]
 
 env:
 #  ARTIFACTORY_USERNAME: "sreenivasrao.basi@gmail.com"
