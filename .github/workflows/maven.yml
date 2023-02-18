@@ -19,7 +19,6 @@ env:
 jobs:
 
   ReleaseLibraries-Job:
-    #runs-on: ubuntu-22.04.1
     runs-on: ubuntu-22.04
     steps:
       - name: Validate input commit message
@@ -30,13 +29,13 @@ jobs:
             exit -1
           fi
           echo "Commit message is :" $message
-      - name: Checkout branch from GitHub
+      - name: Check-out the development branch
         uses: actions/checkout@v3.3.0
 
       - name: Setting up variables
         run: |
           echo "WORK_DIR=`pwd`" >> $GITHUB_ENV
-      - name: Validation process
+      - name: Perform BOM file validation
         run: |
           for i in *.bom
           do
@@ -45,7 +44,6 @@ jobs:
           do
             data+=("$line")
           done <$i
-
           done
           echo "Available BOM file :" $i
           for value in "${data[@]}";
@@ -64,17 +62,17 @@ jobs:
           java-version: '19'
           cache: 'maven'
 
-      - name: GitHub Actions Build with Maven
-        run: |
-          mvn -B package --file pom.xml
-          #mvn -s ./settings.xml package -Dmaven.test.skip
-      
       - name: Set up Cache for Maven
         uses: actions/cache@v3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+
+      - name: GitHub Actions Build with Maven
+        run: |
+          #mvn -B package --file pom.xml
+          mvn -s ./settings.xml package -Dmaven.test.skip
           
       - name: get the pushed tag
         id: pushed-tag
