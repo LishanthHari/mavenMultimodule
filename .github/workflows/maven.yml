@@ -71,8 +71,8 @@ jobs:
 
       - name: GitHub Actions Build with Maven
         run: |
-          #mvn -B package --file pom.xml
-          mvn -s ./settings.xml package -Dmaven.test.skip
+          mvn -B package --file pom.xml
+          #mvn -s ./settings.xml package -Dmaven.test.skip
           
       - name: get the pushed tag
         id: pushed-tag
