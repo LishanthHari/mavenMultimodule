@@ -71,8 +71,8 @@ jobs:
 
       - name: GitHub Actions Build with Maven
         run: |
-          mvn -B package --file pom.xml
-          #mvn -s ./settings.xml package -Dmaven.test.skip
+          #mvn -B package --file pom.xml
+          mvn -s ./settings.xml package -Dmaven.test.skip
 
       - name: Upload artifacts for deployment job to github
         uses: actions/upload-artifact@v3.1.2
