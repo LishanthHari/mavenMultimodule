@@ -92,7 +92,7 @@ jobs:
           name: release-library
           
       - name: Display structure of downloaded files in github
-        run: ls -R
+        run: ls -R *.jar
         
       - name: Deploy jar to Artifactory
         run: |
