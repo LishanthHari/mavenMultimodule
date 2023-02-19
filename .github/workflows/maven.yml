@@ -74,6 +74,14 @@ jobs:
           mvn -B package --file pom.xml
           #mvn -s ./settings.xml package -Dmaven.test.skip
           
+      - name: Creating Tag
+        run: |
+          tag_name="${{ steps.latest-tag.outputs.TAG_NAME }}"
+          echo "Creating new tag $tag_name"
+          branch_name=$(echo $GITHUB_REF | awk -F/ '{print $NF}')
+          git tag $tag_Name -m "$branch_name"
+          git push --tags
+          
       - name: get the pushed tag
         id: pushed-tag
         run: |
