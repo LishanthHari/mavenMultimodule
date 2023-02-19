@@ -54,8 +54,6 @@ jobs:
             fi
             echo "Sub modules/Dependencies :" $value
             find $value/pom.xml
-            env:
-              SUBFOLDERS: ${{ value }}
           done
       - name: Setup Java
         uses: actions/setup-java@v3.10.0
