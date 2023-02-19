@@ -35,7 +35,8 @@ jobs:
         id: set-matrix
         run: |
           echo "::set-output name=matrix::$(ls -l | grep '^d' | awk -F ' ' '{print $9}' | grep -Po '\d{3}.*' | jq -R -s -c 'split("\n") | map(select(length > 0))')"
-
+      - name: Set output
+        run: echo "::set-output name={name}::{value}"
       - name: get latest tag
         id: latest-tag
         run: |
