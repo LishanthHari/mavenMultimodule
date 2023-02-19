@@ -96,7 +96,7 @@ jobs:
           #mvn -s ./settings.xml package -Dmaven.test.skip
       - name: Deploy jar to Artifactory
         run: |
-          ARTIFACT=$value
+          ARTIFACT=one-1.0.jar
           echo $ARTIFACT
           DEPLOY_ARTIFACT_PATH="${{env.ARTIFACTORY_LOCAL}}/${{env.ARTIFACTORY_PATH}}/$ARTIFACT"
           ARTIFACT_PATH=./**/target/$ARTIFACT
