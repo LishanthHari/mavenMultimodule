@@ -15,6 +15,7 @@ env:
   ARTIFACTORY_PATH: "com/test_artfct/jar"
   VERSION_TYPE: "SNAPSHOT"
   COMMITMESSAGE: ${{ github.event.head_commit.message }}
+  FILECONTENT : ""
 
 jobs:
 
@@ -74,6 +75,8 @@ jobs:
             fi
             echo "Sub modules/Dependencies :" $value
             find $value/pom.xml
+            echo $value >> $FILECONTENT
+            echo $FILECONTENT
           done
       - name: Setup Java
         uses: actions/setup-java@v3.10.0
