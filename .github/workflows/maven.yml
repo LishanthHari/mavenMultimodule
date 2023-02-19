@@ -25,7 +25,7 @@ jobs:
         run: |
           message=${{ contains(github.event.head_commit.message, 'Release Library') }}
           if [ ${message} == false ]; then
-            echo "Invalid commit message, Please use 'Release Library' to run job "
+            echo "Invalid commit message, Please use 'Release Library' to  run job "
             exit -1
           fi
           echo "Commit message is :" $message
