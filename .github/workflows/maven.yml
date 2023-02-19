@@ -11,7 +11,7 @@ env:
   ARTIFACTORY_PASSWORD: ${{ secrets.JFROG_ARTIFACTORY_TOKEN }}
   ARTIFACTORY_HOST: "https://artifactory.build"
   ARTIFACT_VERSION: "1.0.0"
-  ARTIFACTORY_LOCAL: "https://artifactory.build"
+  ARTIFACTORY_LOCAL: "https://gochipathala.jfrog.io/artifactory/fms-libs-release"
   ARTIFACTORY_PATH: "com/test_artfct/jar"
   VERSION_TYPE: "SNAPSHOT"
   COMMITMESSAGE: ${{ github.event.head_commit.message }}
