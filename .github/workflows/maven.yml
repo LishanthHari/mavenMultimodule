@@ -104,6 +104,7 @@ jobs:
         
       - name: Deploy jar to Artifactory
         run: |
+          VERSION=${{ env.ARTIFACT_VERSION }}
           ARTIFACT=${{ matrix.images }}-${VERSION}.jar
           echo $ARTIFACT
           DEPLOY_ARTIFACT_PATH="${{env.ARTIFACTORY_LOCAL}}/${{env.ARTIFACTORY_PATH}}/$ARTIFACT"
