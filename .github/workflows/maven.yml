@@ -76,7 +76,7 @@ jobs:
         run: |
           #mvn -B package --file pom.xml
           #mvn -s ./settings.xml package -Dmaven.test.skip
-          mvn -s configuration/settings.xml package -Drevision=${{env.ARTIFACT_VERSION}}  -Dprefix=${{env.PREFIX}}-${{env.ENVIRONMENT}}-
+          mvn -s settings.xml package -Drevision=${{env.ARTIFACT_VERSION}}  -Dprefix=${{env.PREFIX}}-${{env.ENVIRONMENT}}-
 
       - name: Upload artifacts for deployment job to github
         uses: actions/upload-artifact@v3.1.2
