@@ -31,6 +31,10 @@ jobs:
           echo "Commit message is :" $message
       - name: Check-out the development branch
         uses: actions/checkout@v3.3.0
+      - name: Generate matrix with all modules of WhatTheHack repository
+        id: set-matrix
+        run: |
+          echo "::set-output name=matrix::$(ls -l | grep '^d' | awk -F ' ' '{print $9}' | grep -Po '\d{3}.*' | jq -R -s -c 'split("\n") | map(select(length > 0))')"
 
       - name: get latest tag
         id: latest-tag
