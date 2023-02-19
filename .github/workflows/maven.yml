@@ -32,6 +32,20 @@ jobs:
       - name: Check-out the development branch
         uses: actions/checkout@v3.3.0
 
+      - name: get latest tag
+        id: latest-tag
+        run: |
+          tag_name="DEV."
+          latest_tag=$(git tag --sort creatordate -l $tag_name* | tail -n1)
+          if [ -z "$latest_tag" ];
+            then
+              tag_name=""$tag_name"100000"
+          else
+              tag_name=$(perl -pe 's/(\d+)(?!.*\d+)/$1+1/e' <<< $latest_tag)
+          fi
+          echo "TAG_NAME=${tag_name}" >> $GITHUB_OUTPUT
+          echo "tag name = " $tag_name
+
       - name: Setting up variables
         run: |
           echo "WORK_DIR=`pwd`" >> $GITHUB_ENV
