@@ -20,6 +20,13 @@ jobs:
 
   ReleaseLibraries-Job:
     runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        images:
+          - one
+          - two
+          - three
     steps:
 
       - name: Validate input commit message
@@ -105,11 +112,10 @@ jobs:
           echo artifact name: $ARTIFACT
           echo deploy artifact path: $DEPLOY_ARTIFACT_PATH
           curl -u ${{env.ARTIFACTORY_USERNAME}}:${{env.ARTIFACTORY_PASSWORD}} -X PUT "$DEPLOY_ARTIFACT_PATH" -T $ARTIFACT_PATH
-          
-    strategy:
-      fail-fast: false
-      matrix:
-        images:
-          - one
-          - two
-          - three
+      - name: Creating Tag
+        run: |
+          tag_name="${{ steps.latest-tag.outputs.TAG_NAME }}"
+          echo "Creating new tag $tag_name"
+          branch_name=$(echo $GITHUB_REF | awk -F/ '{print $NF}')
+          git tag $tag_Name -m "$branch_name"
+          git push --tags
