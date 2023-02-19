@@ -15,7 +15,6 @@ env:
   ARTIFACTORY_PATH: "com/test_artfct/jar"
   VERSION_TYPE: "SNAPSHOT"
   COMMITMESSAGE: ${{ github.event.head_commit.message }}
-  FILECONTENT : ""
 
 jobs:
 
@@ -32,26 +31,6 @@ jobs:
           echo "Commit message is :" $message
       - name: Check-out the development branch
         uses: actions/checkout@v3.3.0
-      - name: Generate matrix with all modules of WhatTheHack repository
-        id: set-matrix
-        run: |
-          echo "::set-output name=matrix::$(ls -l | grep '^d' | awk -F ' ' '{print $9}' | grep -Po '\d{3}.*' | jq -R -s -c 'split("\n") | map(select(length > 0))')"
-      - name: Set output
-        run: echo "::set-output name={name}::{value}"
-             echo "{name}={value}" >> $GITHUB_OUTPUT
-      - name: get latest tag
-        id: latest-tag
-        run: |
-          tag_name="DEV."
-          latest_tag=$(git tag --sort creatordate -l $tag_name* | tail -n1)
-          if [ -z "$latest_tag" ];
-            then
-              tag_name=""$tag_name"100000"
-          else
-              tag_name=$(perl -pe 's/(\d+)(?!.*\d+)/$1+1/e' <<< $latest_tag)
-          fi
-          echo "TAG_NAME=${tag_name}" >> $GITHUB_OUTPUT
-          echo "tag name = " $tag_name
 
       - name: Setting up variables
         run: |
@@ -75,6 +54,8 @@ jobs:
             fi
             echo "Sub modules/Dependencies :" $value
             find $value/pom.xml
+            env:
+              SUBFOLDERS: ${{ value }}
           done
       - name: Setup Java
         uses: actions/setup-java@v3.10.0
@@ -94,36 +75,7 @@ jobs:
         run: |
           mvn -B package --file pom.xml
           #mvn -s ./settings.xml package -Dmaven.test.skip
-      - name: Deploy jar to Artifactory
-        run: |
-          ARTIFACT=one-1.0.jar
-          echo $ARTIFACT
-          DEPLOY_ARTIFACT_PATH="${{env.ARTIFACTORY_LOCAL}}/${{env.ARTIFACTORY_PATH}}/$ARTIFACT"
-          ARTIFACT_PATH=./**/target/$ARTIFACT
-          echo artifact name: $ARTIFACT
-          echo deploy artifact path: $DEPLOY_ARTIFACT_PATH
-          curl -u ${{env.ARTIFACTORY_USERNAME}}:${{env.ARTIFACTORY_PASSWORD}} -X PUT "$DEPLOY_ARTIFACT_PATH" -T $ARTIFACT_PATH
 
-
-      - name: Creating Tag
-        run: |
-          tag_name="${{ steps.latest-tag.outputs.TAG_NAME }}"
-          echo "Creating new tag $tag_name"
-          branch_name=$(echo $GITHUB_REF | awk -F/ '{print $NF}')
-          git tag $tag_Name -m "$branch_name"
-          git push --tags
-          
-      - name: get the pushed tag
-        id: pushed-tag
-        run: |
-          echo "TAG_NAME=${{  github.ref_name }}" >> $GITHUB_OUTPUT
-      - name: Checkout the pushed tag
-        run: |
-          tag_name="${{ steps.pushed-tag.outputs.TAG_NAME }}"
-          git fetch --all --tags
-          git checkout "tags/${tag_name}" -b "merge/development/${tag_name}"
-          echo $tag_name
-          
       - name: Upload artifacts for deployment job to github
         uses: actions/upload-artifact@v3.1.2
         with:
@@ -131,6 +83,7 @@ jobs:
           path: |
             ${{ github.workspace }}/**/target/*.jar
             ${{ github.workspace }}/**/pom.xml
+
       - name: Download artifact from build job in github
         uses: actions/download-artifact@v3.0.2
         with:
@@ -139,7 +92,7 @@ jobs:
         run: ls -R
       - name: Deploy jar to Artifactory
         run: |
-          ARTIFACT=$value
+          ARTIFACT=one-1.0.jar
           echo $ARTIFACT
           DEPLOY_ARTIFACT_PATH="${{env.ARTIFACTORY_LOCAL}}/${{env.ARTIFACTORY_PATH}}/$ARTIFACT"
           ARTIFACT_PATH=./**/target/$ARTIFACT
