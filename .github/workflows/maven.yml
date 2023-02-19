@@ -20,7 +20,15 @@ jobs:
 
   ReleaseLibraries-Job:
     runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        images:
+          - one
+          - two
+          - three
     steps:
+
       - name: Validate input commit message
         run: |
           message=${{ contains(github.event.head_commit.message, 'Release Library') }}
@@ -63,7 +71,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '19'
-          cache: 'maven'
+          #cache: 'maven'
 
       - name: Set up Cache for Maven
         uses: actions/cache@v3
@@ -92,11 +100,11 @@ jobs:
           name: release-library
           
       - name: Display structure of downloaded files in github
-        run: ls -R *.jar
+        run: ls -R
         
       - name: Deploy jar to Artifactory
         run: |
-          ARTIFACT=one-1.0.jar
+          ARTIFACT=${{ matrix.images }}-${VERSION}.jar
           echo $ARTIFACT
           DEPLOY_ARTIFACT_PATH="${{env.ARTIFACTORY_LOCAL}}/${{env.ARTIFACTORY_PATH}}/$ARTIFACT"
           ARTIFACT_PATH=./**/target/$ARTIFACT
