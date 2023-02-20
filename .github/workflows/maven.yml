@@ -106,7 +106,7 @@ jobs:
           do
             echo "Sub modules/Dependencies :" $value
             find $value/pom.xml
-            VERSION=${{ env.ARTIFACT_VERSION }}-${{ env.VERSION_TYPE }}
+            VERSION=${{ env.ARTIFACT_VERSION }}
             ARTIFACT=${value}-${VERSION}.jar
             DEPLOY_ARTIFACT_PATH="${{env.ARTIFACTORY_LOCAL}}/${{env.ARTIFACTORY_PATH}}/${value}/${VERSION}/$ARTIFACT"
             ARTIFACT_PATH=./**/target/$ARTIFACT
