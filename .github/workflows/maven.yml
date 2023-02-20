@@ -104,8 +104,21 @@ jobs:
         
       - name: Deploy jar to Artifactory
         run: |
+          while read line;
+          do
+            data+=("$line")
+          done <test.com
+          for value in "${data[@]}";
+          do
+            if [ ${value} == false ]; then
+              echo "Pom file not available "
+              exit -1
+            fi
+            echo "Sub modules/Dependencies :" $value
+            find $value/pom.xml
+          done
           VERSION=${{ env.ARTIFACT_VERSION }}
-          ARTIFACT=${{ matrix.images }}-${VERSION}.jar
+          ARTIFACT=${{ value }}-${VERSION}.jar
           echo $ARTIFACT
           DEPLOY_ARTIFACT_PATH="${{env.ARTIFACTORY_LOCAL}}/${{env.ARTIFACTORY_PATH}}/$ARTIFACT"
           ARTIFACT_PATH=./**/target/$ARTIFACT
