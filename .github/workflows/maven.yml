@@ -146,10 +146,10 @@ jobs:
           #echo "TAG_NAME=${tag_name}" >> $GITHUB_OUTPUT
           #echo "tag name = " $tag_name
           
-      #- name: Creating Tag
-        #run: |
-          #tag_name="${{ steps.latest-tag.outputs.TAG_NAME }}"
-          #echo "Creating new tag $tag_name"
-          #branch_name=$(echo $GITHUB_REF | awk -F/ '{print $NF}')
-          #git tag $tag_Name -m "$branch_name"
-          #git push --tags
+      - name: Creating Tag
+        run: |
+          tag_name="${{ steps.latest-tag.outputs.TAG_NAME }}"
+          echo "Creating new tag $tag_name"
+          branch_name=$(echo $GITHUB_REF | awk -F/ '{print $NF}')
+          git tag $tag_Name -m "$branch_name"
+          git push --tags
