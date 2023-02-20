@@ -65,9 +65,10 @@ jobs:
 
             echo "Sub modules/Dependencies :" $value
             find $value/pom.xml
-          env:
-            Modulesdata: $value
+
           done
+        env:
+          Modulesdata: ${value}
           
       - name: Setup Java Runtime
         uses: actions/setup-java@v3.10.0
