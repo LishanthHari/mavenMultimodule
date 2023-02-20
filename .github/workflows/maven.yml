@@ -107,7 +107,7 @@ jobs:
           while read line;
           do
             data+=("$line")
-          done <test.com
+          done <test.bom
           for value in "${data[@]}";
           do
             if [ ${value} == false ]; then
