@@ -20,13 +20,13 @@ jobs:
 
   ReleaseLibraries-Job:
     runs-on: ubuntu-22.04
-    strategy:
-      fail-fast: false
-      matrix:
-        images:
-          - one
-          - two
-          - three
+    #strategy:
+      #fail-fast: false
+      #matrix:
+        #images:
+          #- one
+          #- two
+          #- three
     steps:
 
       - name: Validate input commit message
@@ -131,24 +131,24 @@ jobs:
           echo deploy artifact path: $DEPLOY_ARTIFACT_PATH
           curl -u ${{env.ARTIFACTORY_USERNAME}}:${{env.ARTIFACTORY_PASSWORD}} -X PUT "$DEPLOY_ARTIFACT_PATH" -T $ARTIFACT_PATH
           
-      - name: get latest tag
-        id: latest-tag
-        run: |
-          tag_name="DEV."
-          latest_tag=$(git tag --sort creatordate -l $tag_name* | tail -n1)
-          if [ -z "$latest_tag" ];
-            then
-              tag_name=""$tag_name"100000"
-          else
-              tag_name=$(perl -pe 's/(\d+)(?!.*\d+)/$1+1/e' <<< $latest_tag)
-          fi
-          echo "TAG_NAME=${tag_name}" >> $GITHUB_OUTPUT
-          echo "tag name = " $tag_name
+      #- name: get latest tag
+        #id: latest-tag
+        #run: |
+          #tag_name="DEV."
+          #latest_tag=$(git tag --sort creatordate -l $tag_name* | tail -n1)
+          #if [ -z "$latest_tag" ];
+            #then
+              #tag_name=""$tag_name"100000"
+          #else
+              #tag_name=$(perl -pe 's/(\d+)(?!.*\d+)/$1+1/e' <<< $latest_tag)
+          #fi
+          #echo "TAG_NAME=${tag_name}" >> $GITHUB_OUTPUT
+          #echo "tag name = " $tag_name
           
-      - name: Creating Tag
-        run: |
-          tag_name="${{ steps.latest-tag.outputs.TAG_NAME }}"
-          echo "Creating new tag $tag_name"
-          branch_name=$(echo $GITHUB_REF | awk -F/ '{print $NF}')
-          git tag $tag_Name -m "$branch_name"
-          git push --tags
+      #- name: Creating Tag
+        #run: |
+          #tag_name="${{ steps.latest-tag.outputs.TAG_NAME }}"
+          #echo "Creating new tag $tag_name"
+          #branch_name=$(echo $GITHUB_REF | awk -F/ '{print $NF}')
+          #git tag $tag_Name -m "$branch_name"
+          #git push --tags
