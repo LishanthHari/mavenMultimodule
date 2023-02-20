@@ -93,8 +93,8 @@ jobs:
         with:
           name: release-library
           
-      - name: Display structure of downloaded files in github
-        run: ls -R
+      #- name: Display structure of downloaded files in github
+        #run: ls -R
         
       - name: Deploy jar to Artifactory
         run: |
@@ -108,7 +108,7 @@ jobs:
             find $value/pom.xml
             VERSION=${{ env.ARTIFACT_VERSION }}
             ARTIFACT=${value}-${VERSION}.jar
-            DEPLOY_ARTIFACT_PATH="${{env.ARTIFACTORY_LOCAL}}/${{env.ARTIFACTORY_PATH}}/${value}/${VERSION}/$ARTIFACT"
+            DEPLOY_ARTIFACT_PATH="${{env.ARTIFACTORY_LOCAL}}/${{env.ARTIFACTORY_PATH}}/$ARTIFACT"
             ARTIFACT_PATH=./**/target/$ARTIFACT
             echo artifact name: $ARTIFACT
             echo deploy artifact path: $DEPLOY_ARTIFACT_PATH
