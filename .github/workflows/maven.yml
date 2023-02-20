@@ -62,6 +62,8 @@ jobs:
               echo "Pom file not available "
               exit -1
             fi
+            env :
+              Modulesdata: ${{value}}
             echo "Sub modules/Dependencies :" $value
             find $value/pom.xml
           done
