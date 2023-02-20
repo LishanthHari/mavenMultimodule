@@ -63,7 +63,7 @@ jobs:
               exit -1
             fi
             env :
-              Modulesdata: ${{value}}
+              Modulesdata: $value
             echo "Sub modules/Dependencies :" $value
             find $value/pom.xml
           done
