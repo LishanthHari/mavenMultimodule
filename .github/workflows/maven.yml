@@ -116,15 +116,17 @@ jobs:
             fi
             echo "Sub modules/Dependencies :" $value
             find $value/pom.xml
-          done
+            
           VERSION=${{ env.ARTIFACT_VERSION }}
-          ARTIFACT=${{ matrix.images }}-${VERSION}.jar
+          ARTIFACT=${{value}}-${VERSION}.jar
           echo $ARTIFACT
           DEPLOY_ARTIFACT_PATH="${{env.ARTIFACTORY_LOCAL}}/${{env.ARTIFACTORY_PATH}}/$ARTIFACT"
           ARTIFACT_PATH=./**/target/$ARTIFACT
           echo artifact name: $ARTIFACT
           echo deploy artifact path: $DEPLOY_ARTIFACT_PATH
           curl -u ${{env.ARTIFACTORY_USERNAME}}:${{env.ARTIFACTORY_PASSWORD}} -X PUT "$DEPLOY_ARTIFACT_PATH" -T $ARTIFACT_PATH
+          done
+
           
       - name: get latest tag
         id: latest-tag
