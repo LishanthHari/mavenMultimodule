@@ -44,7 +44,7 @@ jobs:
          git fetch
          git checkout main   
       - name: Get diff
-        run: git diff --dirstat=files,0 HEAD~1 ${{github.head_ref}} -- | sed 's/CommonLib/''/' |  cut -f2 -d"/"
+        run: git diff --dirstat=files,0 HEAD~1 ${{github.head_ref}} -- | sed 's/mavenMultimodule/''/' |  cut -f2 -d"/"
 
       - name: Perform BOM file validation
         run: |
