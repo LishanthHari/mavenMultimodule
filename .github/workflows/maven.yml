@@ -37,6 +37,14 @@ jobs:
           
       - name: Check-out the git branch
         uses: actions/checkout@v3.3.0
+        with:
+          ref: ${{github.head_ref}}
+      - name: git
+        run: |
+         git fetch
+         git checkout main   
+      - name: Get diff
+        run: git diff --dirstat=files,0 HEAD~1 ${{github.head_ref}} -- | sed 's/CommonLib/''/' |  cut -f2 -d"/"
 
       - name: Perform BOM file validation
         run: |
